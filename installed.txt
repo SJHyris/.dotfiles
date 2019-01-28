@@ -1,0 +1,17 @@
+###########BASICS
+vim
+gcc
+git
+gdb
+palemoon
+#################DEV
+build-essential
+cmake
+base-devel
+valgrind
+############UTILS
+neofetch
+unzip
+###########TOOLS
+wireshark
+radare2
