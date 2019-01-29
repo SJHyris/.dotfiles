@@ -21,4 +21,11 @@ set shiftwidth=4	" number of spaces of << or >> commands
 set shiftround		" << and >>  align w/ multiples of shiftwidth
 set autoindent		" lines inherit tabbing from line before
 
-
+"
+" ABBREVIATIONS
+"
+"" C ABBREVIATIONS
+""
+:iabbrev stdio #include <stdio.h> 
+:iabbrev main int main(void){}<LEFT><CR><CR><CR><CR><UP><TAB>return 0;<UP><UP><TAB>
+:iabbrev DBG printf("[DEBUG]: ");<LEFT><LEFT><LEFT><LEFT>
