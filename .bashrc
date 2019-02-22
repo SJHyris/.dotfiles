@@ -149,4 +149,8 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 
-
+# HISTORY SETTINGS
+#
+export HISTTIMEFORMAT="%d/%m/%y %X "	#Timestamp
+export HISTIGNORE="ls:cd"				#Don't record commands
+export HISTCONTROL=ignoredups			#Don't record dups
