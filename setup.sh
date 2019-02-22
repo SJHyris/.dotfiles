@@ -30,7 +30,6 @@ while read -r line; do
 
 		((countitem+=1))
 	fi
-
 done < ~/.dotfiles/installed.txt
 
 
@@ -64,9 +63,53 @@ function print_menu {
 		echo "	${i}) $item"
 		((i+=1))
 	done
+	echo "	------------"
+	echo "	q) exit"
+	(( i-=1 ))
+	return $i
+	
+	}
+
+
+function submenu {
+
+	echo "[x] Select the software you wish to install."
+	echo "[x] Type "all" to install them all."
+	echo
+	print_menu "$1"
+	len=$?
+
+
+	read option
+
+	if [ "$option" == "q" ]; then 
+		return
+
+	elif [ "$option" == "all" ]; then 
+		return
+
+	elif [ $option -ge 1 ] && [ $option -le $len ]; then
+		
+		item="${1}[$(($option - 1))]"
+		declare item=${!item}
+		install "$item"
+
+	else
+		echo "[x] \"$option\" Is Not A Valid Option"
+	fi
 }
 
+function gcc { echo "works"
+}
 
+function install {
+	specific=("pcalc")
+	if [[ " ${specific[@]} " =~ " ${1} " ]]; then
+		${1}
+	else
+		sudo pacman --needed -S $1
+	fi
+}
 
 function symlink_setup {
 	$BACKUP_DOTFILES="~/.olddotfiles"
@@ -80,10 +123,13 @@ function symlink_setup {
 			# "MAKE DIR if doesn-t exist" function?
 			echo "	[x] Moving old $dotfile to $BACKUP_DOTFILES"
 			mv "$dotfile" "$BACKUP_DOTFILES"
-			# and symlink
-		else
-			# just symlink
+
 			echo "	[x] Symlinking $dotfile"
+			ln -s "~/.dotfiles/${dotfile}" "~/${dotfile}"
+
+		else
+			echo "	[x] Symlinking $dotfile"
+			ln -s "~/.dotfiles/${dotfile}" "~/${dotfile}"
 		fi
 	done < ~/.dotfiles/locations.txt
 }
@@ -132,22 +178,22 @@ if userYN "[x] Setup dotfiles?"; then
 	echo 
 fi
 
-echo "[x] What do you wish to install?"
-echo ''
-print_menu "mainmenu"
-echo "	------------"
-echo "	q) exit"
+while :
+do
+	echo "[x] What do you wish to install?"
+	echo ''
+	print_menu "mainmenu"
 
-read option
+	read option
 
-if [ $option -ge 1 ] && [ $option -le ${#mainmenu[@]} ]; then
+	if [[ "$option" == "q" ]]; then 
+		exit
+	elif [ $option -ge 1 ] && [ $option -le ${#mainmenu[@]} ]; then
+		
+		submenu "${mainmenu[(($option - 1))]}"
 
-	print_menu "${mainmenu[(($option - 1))]}"
+	else
+		echo "[x] \"$option\" Is Not A Valid Option"
+	fi
 
-elif [ $option -eq "q" ]; then 
-	return
-else
-	echo "[x] \"$option\" Is Not A Valid Option"
-fi
-
-
+done
