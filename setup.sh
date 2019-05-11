@@ -4,9 +4,9 @@
 # Written by me
 #
 # TO DO:
-#		Read packages from file
-#		Symlink dotfiles
+#		Do the "Install all" option for a module
 #		Log choices made so the config is repeatable.
+#		Low priority: make it usable on ubuntu?
 
 
 ###############################################
@@ -16,11 +16,20 @@
 countmenu=0
 countitem=0
 
+# Read menu from the file
 while read -r line; do
+
+	# Main Menu options are prefixed by @@@
 	if [[ $line == @@@* ]]; then
-		#Add to the MENU array
+
+		#Add to the mainmenu array, stripping it of the @@@
 		mainmenu[${countmenu}]=${line:3}		
+		
+		# Create an array of arrays named "menu"
+		# And add an item by the name of the option it just read 
 		menu=${mainmenu[${countmenu}]}
+
+		# Increment and reset counters
 		((countmenu+=1))
 		countitem=0
 		
@@ -99,11 +108,9 @@ function submenu {
 	fi
 }
 
-function gcc { echo "works"
-}
 
 function install {
-	specific=("pcalc")
+	specific=("pcalc", "wireshark", "pip", "pwntools", "python_net")
 	if [[ " ${specific[@]} " =~ " ${1} " ]]; then
 		${1}
 	else
@@ -112,7 +119,7 @@ function install {
 }
 
 function symlink_setup {
-	$BACKUP_DOTFILES="~/.olddotfiles"
+	BACKUP_DOTFILES=".olddotfiles"
 	while IFS= read -r dotfile; do
 		cd ~
 		dotfile=$dotfile
@@ -120,16 +127,15 @@ function symlink_setup {
 			echo "	[x] Symlink for $dotfile already setup."
 
 		elif [ -f "$dotfile" ]; then
-			# "MAKE DIR if doesn-t exist" function?
+			mkdir $BACKUP_DOTFILES
 			echo "	[x] Moving old $dotfile to $BACKUP_DOTFILES"
 			mv "$dotfile" "$BACKUP_DOTFILES"
 
 			echo "	[x] Symlinking $dotfile"
-			ln -s "~/.dotfiles/${dotfile}" "~/${dotfile}"
-
+					ln -s ~/.dotfiles/${dotfile} ~/${dotfile}
 		else
 			echo "	[x] Symlinking $dotfile"
-			ln -s "~/.dotfiles/${dotfile}" "~/${dotfile}"
+			ln -s ~/.dotfiles/${dotfile} ~/${dotfile}
 		fi
 	done < ~/.dotfiles/locations.txt
 }
@@ -149,10 +155,32 @@ pcalc ()	{
 	echo "	[x] Cloning files from repo"
 	git clone https://github.com/vapier/pcalc.git
 	cd ./pcalc
+	make
 	sudo make install
 	cd ~/.dotfiles
 	echo "	[x] Removing installation files"
 	rm -rf ./pcalc	
+}
+
+function wireshark { echo "works"
+	sudo pacman -S wireshark-qt
+	sudo gpasswd -a $USER wireshark
+}
+
+function pip {
+	sudo pacman -S --needed python-pip python2-pip
+}
+
+function pwntools {
+	sudo pip2 install pwntools
+}
+
+python_net () {
+	sudo pip install sockets
+	sudo pip install matplotlib
+	sudo pacman -S tk
+	sudo pip install requests
+	sudo pip install python-geoip
 }
 
 ##############################################################

@@ -5,8 +5,6 @@
 alias ..='cd ..'							#up one folder
 alias ...='cd ..; cd ..'					#up two folders
 
-alias ese="cd ~/Projects/Esercitazioni"		#cd alla cartella uni 
-alias lib="cd ~/Lib"						#cd alla home lib
 
 #programs restated with options
 
@@ -16,4 +14,6 @@ alias cp="cp -vi"							# ask before overwrite
 
 alias df="df -h"							# h-readable disk space
 alias ls="ls --group-directories-first --color=auto"
+
+alias objdump=" objdump -M intel"
 #m/b alias shred="shred -uz"
