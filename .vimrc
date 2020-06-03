@@ -51,5 +51,8 @@ set incsearch		" Highlight as you type
 "" C ABBREVIATIONS
 ""
 :iabbrev stdio #include <stdio.h> 
+:iabbrev stdlib #include <stdlib.h> 
 :iabbrev intmain int main(void){}<LEFT><CR><CR><CR><CR><UP><TAB>return 0;<UP><UP><TAB>
 :iabbrev DBG printf("[DEBUG]: ");<LEFT><LEFT><LEFT><LEFT>
+:iabbrev tstruct struct NAME {<CR><CR>} TAG; <UP><TAB>
+
